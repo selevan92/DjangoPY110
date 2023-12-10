@@ -27,7 +27,7 @@ def current_weather(lat, lon):
     """
     Описание функции, входных и выходных переменных
     """
-    token = 'Ваш токен'  # Вставить ваш токен
+    token = '01f5456f-e1b3-441e-af79-f15dc73d1f79'  # Вставить ваш токен
     url = f"https://api.weather.yandex.ru/v2/forecast?lat={lat}&lon={lon}"
     headers = {"X-Yandex-API-Key": f"{token}"}
     response = requests.get(url, headers=headers)
