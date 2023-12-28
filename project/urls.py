@@ -17,7 +17,7 @@ Including another URLconf
 from random import random
 from django.contrib import admin
 from django.http import HttpResponse
-from django.urls import path
+from django.urls import path, include
 from app_datetime.views import datetime_view
 from app_weather.views import my_view
 from store.views import product_view, show_view
@@ -32,7 +32,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('random/', random_view),
     path('datetime/', datetime_view),
-    path('weather/', my_view),
-    path('product/', product_view),
-    path('', show_view)
+    path('', include('store.urls')),
+    path('', include('app_weather.urls')),
+
 ]

@@ -37,7 +37,7 @@ def current_weather(lat, lon):
 
     result = {
         'city': data['geo_object']['locality']['name'],
-        'time': datetime.fromtimestamp(data['fact']['uptime']).strftime("%H:%M"),
+        'time': datetime.fromtimestamp(data['fact']['obs_time']).strftime("%H:%M"),
         'temp': data['fact']['temp'],  # TODO Реализовать вычисление температуры из данных полученных от API
         'feels_like_temp': data['fact']['feels_like'],  # TODO Реализовать вычисление ощущаемой температуры из данных полученных от API
         'pressure': data['fact']['pressure_mm'],  # TODO Реализовать вычисление давления из данных полученных от API
@@ -51,3 +51,4 @@ def current_weather(lat, lon):
 
 if __name__ == "__main__":
     print(json.dumps(current_weather(59.93, 30.31), indent=4, ensure_ascii=False))  # Проверка работы для координат Санкт-Петербурга
+    # print(json.dumps(current_weather(52.53, 103.88), indent=4, ensure_ascii=False))
