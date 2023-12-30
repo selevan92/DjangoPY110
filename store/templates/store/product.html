@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="hero-wrap hero-bread" style="background-image: url('../static/images/bg_1.jpg');">
+<div class="hero-wrap hero-bread" style="background-image: url({% static 'store/images/bg_1.jpg' %});">
       <div class="container">
         <div class="row no-gutters slider-text align-items-center justify-content-center">
           <div class="col-md-9 ftco-animate text-center">
@@ -42,20 +42,11 @@
 								<a href="#" class="mr-2" style="color: #000;">{{product.sold_value}} <span style="color: #bbb;">Продано</span></a>
 							</p>
 						</div>
-    				<p class="price">
-						{% if product.discount %}
-							<span>
-								<del>
-									&#x20bd {{product.price_before}}
-								</del>
-								&#x20bd {{product.price_after}}
-							</span>
-						{% else %}
-							<span>
-								&#x20bd {{product.price_before}}
-							</span>
-						{% endif %}
-					</p>
+					{% if product.discount %}
+					<p class="price"><span><del>&#x20bd {{product.price_before}}</del>&#x20bd {{product.price_after}}</span></p>
+					{% else %}
+					<p class="price"><span>&#x20bd {{product.price_before}}</span></p>
+					{% endif %}
     				<p>{{product.description}}
 						</p>
 						<div class="row mt-4">
@@ -108,19 +99,30 @@
     	</div>
     	<div class="container">
     		<div class="row">
-				{% for product in products %}
+				{% for prod in prod_category %}
     			<div class="col-md-6 col-lg-3 ftco-animate">
     				<div class="product">
-    					<a href="{% url 'products_page_view' product.html %}" class="img-prod">
-							<img class="img-fluid" src="{% static product.url %}" alt="Colorlib Template">
+    					<a href="{% url 'store:products_page_view' prod.html %}" class="img-prod">
+							<img class="img-fluid" src="{% static prod.url %}" alt="Colorlib Template">
 	    					<div class="overlay"></div>
+							{% if prod.discount %}
+							<span class="status">{{prod.discount}}%</span>
+							{% else %}
+							<div class="overlay"></div>
+							{% endif %}
 	    				</a>
     					<div class="text py-3 pb-4 px-3 text-center">
-    						<h3><a href="{% url 'products_page_view' product.html %}">{{product.name}}</a></h3>
+    						<h3><a href="{{ prod.html }}.html">{{prod.name}}</a></h3>
+<!--							<h3><a href="{% url 'store:products_page_view' prod.html %}">{{prod.name}}</a></h3>-->
     						<div class="d-flex">
     							<div class="pricing">
 		    						<p class="price">
-										<span>&#x20bd {{product.price_before}}</span>
+										{% if prod_cat.discount %}
+										<span class="mr-2 price-dc">&#20bd {{prod.price_before}}</span>
+										<span class="price-sale">&#x20bd {{prod.price_after}}</span>
+										{% else %}
+										<span>&#x20bd {{prod.price_before}}</span>
+										{% endif %}
 									</p>
 		    					</div>
 	    					</div>

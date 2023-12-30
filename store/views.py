@@ -63,13 +63,19 @@ def products_page_view(request, page):
         if isinstance(page, str):
             for data in DATABASE.values():
                 if data['html'] == page:
-                    return render(request, "store/product.html", context={"product": data})
+                    data_category = filtering_category(DATABASE, category_key=data['category'])
+                    data_category.remove(data)
+                    return render(request, "store/product.html", context={"product": data,
+                                                                         "prod_category": data_category[:5]})
 
         elif isinstance(page, int):
             # Обрабатываем условие того, что пытаемся получить страницу товара по его id
-            data = DATABASE.get(str(page))  # Получаем какой странице соответствует данный id
+            data = DATABASE[str(page)]  # Получаем какой странице соответствует данный id
             if data:
-                return render(request, "store/product.html", context={"product": data})
+                data_category = filtering_category(DATABASE, category_key=data['category'])
+                data_category.remove(data)
+                return render(request, "store/product.html", context={"product": data,
+                                                                      "prod_category": data_category[:5]})
 
         return HttpResponse(status=404)
 
