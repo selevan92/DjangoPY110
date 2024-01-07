@@ -61,17 +61,17 @@
     {% block nav %} <!-- Блок для навигационной панели страницы магазина-->
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
 	    <div class="container">
-	      <a class="navbar-brand" href="#">Vegefoods</a>
+	      <a class="navbar-brand" href="{% url 'store:shop_view' %}">Vegefoods</a>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="oi oi-menu"></span> Навигация
 	      </button>
 
 	      <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav ml-auto">
-	          <li class="nav-item"><a href="shop.html" class="nav-link">Магазин</a>
+	          <li class="nav-item"><a href="{% url 'store:shop_view' %}" class="nav-link">Магазин</a>
 			  <li class="nav-item"><a href="wishlist.html" class="nav-link">Избранное</a>
-			  <li class="nav-item"><a href="cart.html" class="nav-link">Корзина</a>
-			  <li class="nav-item"><a href="login.html" class="nav-link">Войти в аккаунт</a>
+			  <li class="nav-item"><a href="{% url 'store:cart_view' %}" class="nav-link">Корзина</a>
+			  <li class="nav-item"><a href="{% url 'login:login_view' %}" class="nav-link">Войти в аккаунт</a>
 	        </ul>
 	      </div>
 	    </div>

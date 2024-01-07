@@ -34,5 +34,6 @@ urlpatterns = [
     path('datetime/', datetime_view),
     path('', include('store.urls')),
     path('', include('app_weather.urls')),
+    path('login/', include('app_login.urls')),
 
 ]
