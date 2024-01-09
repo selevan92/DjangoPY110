@@ -118,36 +118,64 @@ def add_user_to_cart(request, username: str) -> None:
             cart_users[username] = {'products': {}}
             json.dump(cart_users, f)
 
-if __name__ == "__main__":
-    # from store.models import DATABASE
-    #
-    # test = [
-    #     {'name': 'Клубника', 'discount': None, 'price_before': 500.0,
-    #      'price_after': 500.0,
-    #      'description': 'Сладкая и ароматная клубника, полная витаминов, чтобы сделать ваш день ярче.',
-    #      'rating': 5.0, 'review': 200, 'sold_value': 700,
-    #      'weight_in_stock': 400,
-    #      'category': 'Фрукты', 'id': 2, 'url': 'store/images/product-2.jpg',
-    #      'html': 'strawberry'},
-    #
-    #     {'name': 'Яблоки', 'discount': None, 'price_before': 130.0,
-    #      'price_after': 130.0,
-    #      'description': 'Сочные и сладкие яблоки - идеальная закуска для здорового перекуса.',
-    #      'rating': 4.7, 'review': 30, 'sold_value': 70, 'weight_in_stock': 200,
-    #      'category': 'Фрукты', 'id': 10, 'url': 'store/images/product-10.jpg',
-    #      'html': 'apple'}
-    # ]
-    #
-    # print(filtering_category(DATABASE, 'Фрукты', 'price_after', True) == test)  # True
+def view_in_wishlist(request) -> dict:
+    """
+    Просматривает содержимое wishlist.json
 
-    # Проверка работоспособности функций view_in_cart, add_to_cart, remove_from_cart
-    # Для совпадения выходных значений перед запуском скрипта удаляйте появляющийся файл 'cart.json' в папке
-    print(view_in_cart())  # {'products': {}}
-    print(add_to_cart('1'))  # True
-    print(add_to_cart('0'))  # False
-    print(add_to_cart('1'))  # True
-    print(add_to_cart('2'))  # True
-    print(view_in_cart())  # {'products': {'1': 2, '2': 1}}
-    print(remove_from_cart('0'))  # False
-    print(remove_from_cart('1'))  # True
-    print(view_in_cart())  # {'products': {'2': 1}}
+    :return: Содержимое 'wishlist.json'
+    """
+    if os.path.exists('wishlist.json'):
+        with open('wishlist.json', encoding='utf-8') as f:
+            return json.load(f)
+
+    user = get_user(request).username
+    wishlist = {user: {'products': []}}
+    with open('wishlist.json', mode='x', encoding='utf-8') as f:
+        json.dump(wishlist, f)
+
+    return wishlist
+
+def add_to_wishlist(request, id_product: str) -> bool:
+    """
+    """
+    wishlist_users = view_in_wishlist(request)
+    wishlist = wishlist_users[get_user(request).username]
+
+    if id_product not in wishlist['products']:
+        if not DATABASE.get(id_product):
+            return False
+        wishlist['products'].append(id_product)
+    else:
+        return False
+
+    with open('wishlist.json', mode='w', encoding='utf-8') as f:
+        json.dump(wishlist_users, f)
+
+    return True
+
+def remove_from_wishlist(request, id_product: str) -> bool:
+    """
+    """
+    wishlist_users = view_in_wishlist(request)
+    wishlist = wishlist_users[get_user(request).username]
+
+    if id_product not in wishlist['products']:
+        return False
+    else:
+        wishlist['products'].remove(id_product)
+
+    with open('wishlist.json', mode='w', encoding='utf-8') as f:
+        json.dump(wishlist_users, f)
+
+    return True
+
+def add_user_to_wishlist(request, username: str) -> None:
+    """
+    """
+    wishlist_users = view_in_wishlist(request)
+    wishlist = wishlist_users.get(username)
+
+    if not wishlist:
+        with open('wishlist.json', mode='w', encoding='utf-8') as f:
+            wishlist_users[username] = {'products': []}
+            json.dump(wishlist_users, f)

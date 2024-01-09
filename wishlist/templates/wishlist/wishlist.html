@@ -1,0 +1,65 @@
+{% extends 'store/base.html' %} <!-- Расширение не меняем, оно нормально подтянется-->
+{%load static%}
+
+{% block title %} <!-- Блок для названия страницы-->
+<title>Избранное</title>
+{% endblock %}
+
+{% block content %}
+    <!-- Оформите здесь код уникального содержимого из wishlist.html как делали в cart.html или shop.html-->
+<div class="hero-wrap hero-bread" style="background-image: url({% static 'store/images/bg_1.jpg' %});">
+      <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+          <div class="col-md-9 ftco-animate text-center">
+          	<p class="breadcrumbs"><span class="mr-2"></span></p>
+            <h1 class="mb-0 bread">Избранное</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<section class="ftco-section ftco-cart">
+			<div class="container">
+				<div class="row">
+    			<div class="col-md-12 ftco-animate">
+    				<div class="cart-list">
+	    				<table class="table">
+						    <thead class="thead-primary">
+						      <tr class="text-center">
+						        <th></th>
+						        <th></th>
+						        <th>Продукт</th>
+						        <th>Цена, &#x20bd</th>
+						      </tr>
+						    </thead>
+						    <tbody>
+							  {% for product in products %}
+						      <tr class="text-center">
+						        <td class="product-remove"><a href="{% url 'wishlist:wishlist_del_json' product.id %}"><span class="ion-ios-close"></span></a></td>
+
+						        <td class="image-prod"><a href="{% url 'store:products_page_view' product.id %}">
+									<div class="img" style="background-image: url({% static product.url %});"></div>
+								</a></td>
+
+						        <td class="product-name">
+						        	<h3>{{product.name}}</h3>
+						        	<p>{{product.description}}</p>
+						        </td>
+
+						        <td class="price">
+									{% if product.discount %}
+									<span class="mr-2 price-dc"><del>&#x20bd {{product.price_before}}</del></span>
+									<span class="price-sale">&#x20bd {{product.price_after}}</span>
+									{% else %}
+									<span>&#x20bd {{product.price_before}}</span>
+									{% endif %}
+						      </tr><!-- END TR-->
+							  {% endfor %}
+						    </tbody>
+						  </table>
+					  </div>
+    			</div>
+    		</div>
+			</div>
+		</section>
+{% endblock %}

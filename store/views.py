@@ -31,33 +31,10 @@ def product_view(request):
 
 def show_view(request):
     if request.method == 'GET':
-        # with open('store/shop.html', 'r', encoding='utf-8') as f:
-        #     data = f.read()
-        # return HttpResponse(data)
         return render(request,
                       'store/shop.html',
                       context={"products": DATABASE.values()})
 
-
-# def products_page_view(request, page):
-#     if request.method == "GET":
-#         if isinstance(page, str):
-#             for data in DATABASE.values():
-#                 if data['html'] == page:  # Если значение переданного параметра совпадает именем html файла
-#             # TODO 1. Откройте файл open(f'store/products/{page}.html', encoding="utf-8") (Не забываем про контекстный менеджер with)
-#             # TODO 2. Прочитайте его содержимое
-#             # TODO 3. Верните HttpResponse c содержимым html файла
-#                     with open(f'store/products/{page}.html', 'r', encoding='utf-8') as f:
-#                         data = f.read()
-#                     return HttpResponse(data)
-#         elif isinstance(page, int):
-#             if str(page) in DATABASE:
-#                 with open(f'store/products/{DATABASE[str(page)]["html"]}.html', 'r', encoding='utf-8') as f:
-#                     data = f.read()
-#                 return HttpResponse(data)
-#         # Если за всё время поиска не было совпадений, то значит по данному имени нет соответствующей
-#         # страницы товара и можно вернуть ответ с ошибкой HttpResponse(status=404)
-#         return HttpResponse(status=404)
 
 def products_page_view(request, page):
     if request.method == "GET":
@@ -100,7 +77,7 @@ def cart_view(request):
 
         return render(request, "store/cart.html", context={"products": products})
 
-@login_required(login_url='login:login_view')
+# @login_required(login_url='login:login_view')
 def cart_add_view(request, id_product):
     if request.method == "GET":
         result = add_to_cart(request, id_product) # TODO Вызвать ответственную за это действие функцию
@@ -112,7 +89,7 @@ def cart_add_view(request, id_product):
                             status=404,
                             json_dumps_params={'ensure_ascii': False})
 
-@login_required(login_url='login:login_view')
+
 def cart_del_view(request, id_product):
     if request.method == "GET":
         result = remove_from_cart(request, id_product) # TODO Вызвать ответственную за это действие функцию
@@ -190,7 +167,7 @@ def delivery_estimate_view(request):
         # Если в базе DATA_PRICE есть страна, но нет города, то вернуть JsonResponse со словарём, {"price": значение фиксированной стоимости доставки}
         # Если нет страны, то вернуть HttpResponseNotFound("Неверные данные")
 
-@login_required(login_url='login:login_view')
+# @login_required(login_url='login:login_view')
 def cart_buy_now_view(request, id_product):
     if request.method == "GET":
         result = add_to_cart(request, id_product)
