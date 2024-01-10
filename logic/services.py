@@ -70,7 +70,7 @@ def add_to_cart(request, id_product: str) -> bool:
     # TODO Если товар существует, то увеличиваем его количество на 1
 
     # TODO Не забываем записать обновленные данные cart в 'cart.json'
-    with open('cart.json', 'w', encoding='utf-8') as f:
+    with open('cart.json', mode='w', encoding='utf-8') as f:
         json.dump(cart_users, f)
 
     return True
