@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from logic.services import view_in_wishlist, add_to_wishlist, remove_from_wishlist, add_user_to_wishlist
 from store.models import DATABASE
@@ -29,13 +29,7 @@ def wishlist_add_json(request, id_product: str):
     """
     if request.method == "GET":
         if not get_user(request).username:
-            return ('login:login_view')
-
-        current_user = get_user(request).username
-        existing_wishlist = view_in_wishlist(request).get(current_user, {'products': []})
-        if id_product in existing_wishlist['products']:
-            return JsonResponse({"answer": "Товар уже в избранном"},
-                                json_dumps_params={'ensure_ascii': False, 'indent': 4})
+            raise Exception()
 
         result = add_to_wishlist(request, id_product)  # TODO вызовите обработчик из services.py добавляющий продукт в избранное
         if result:
@@ -54,9 +48,8 @@ def wishlist_del_json(request, id_product: str):
     if request.method == "GET":
         result = remove_from_wishlist(request, id_product)  # TODO вызовите обработчик из services.py удаляющий продукт из избранного
         if result:
-            # return JsonResponse({"answer": "Продукт успешно удалён из избранного"},
-            #                     json_dumps_params={'ensure_ascii': False, 'indent': 4})  # TODO верните JsonResponse с ключом "answer" и значением "Продукт успешно удалён из избранного"
-            return redirect('wishlist:wishlist_view')
+            return JsonResponse({"answer": "Продукт успешно удалён из избранного"},
+                                json_dumps_params={'ensure_ascii': False, 'indent': 4})  # TODO верните JsonResponse с ключом "answer" и значением "Продукт успешно удалён из избранного"
 
         return JsonResponse({"answer": "Неудачное удаление из избранного"},
                             status=404,
@@ -69,7 +62,7 @@ def wishlist_json(request):
     """
     if request.method == "GET":
         current_user = get_user(request).username  # from django.contrib.auth import get_user
-        data = add_user_to_wishlist(request, current_user)  # TODO получите данные о списке товаров в избранном у пользователя
+        data = view_in_wishlist(request).get(current_user)  # TODO получите данные о списке товаров в избранном у пользователя
         if data:
             return JsonResponse(data, json_dumps_params={'ensure_ascii': False,
                                                     'indent': 4}, safe=False)  # TODO верните JsonResponse c data
@@ -77,3 +70,11 @@ def wishlist_json(request):
         return JsonResponse({"answer": "Пользователь не авторизирован"},
                             status=404,
                             json_dumps_params={'ensure_ascii': False})  # TODO верните JsonResponse с ключом "answer" и значением "Пользователь не авторизирован" и параметром status=404
+
+def wishlist_del_view(request, id_product):
+    if request.method == 'GET':
+        result = remove_from_wishlist(request, id_product)
+        if result:
+            return redirect('wishlist:wishlist_view')
+
+        return HttpResponse('Неудачное удаление из корзины', status=404)

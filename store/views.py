@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .models import DATABASE
 from logic.services import filtering_category, view_in_cart, add_to_cart, remove_from_cart, get_user
+
+
 # Create your views here.
 
 def product_view(request):
